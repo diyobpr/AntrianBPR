@@ -107,8 +107,8 @@ include "../header.php";
     </div>
   </main>
 
-<?php
-include "../footer.php";?>
+  <?php
+  include "../footer.php"; ?>
 
   <!-- load file audio bell antrian -->
   <audio id="tingtung" src="../assets/audio/tingtung.mp3"></audio>
@@ -135,9 +135,9 @@ include "../footer.php";?>
 
       // menampilkan data antrian menggunakan DataTables
       var table = $('#tabel-antrian-teller').DataTable({
-        "lengthChange": false,              // non-aktifkan fitur "lengthChange"
-        "searching": false,                 // non-aktifkan fitur "Search"
-        "ajax": "get_antrian_teller.php",          // url file proses tampil data dari database
+        "lengthChange": false, // non-aktifkan fitur "lengthChange"
+        "searching": false, // non-aktifkan fitur "Search"
+        "ajax": "get_antrian_teller.php", // url file proses tampil data dari database
         // menampilkan data
         "columns": [{
             "data": "no_antrian_teller",
@@ -159,12 +159,12 @@ include "../footer.php";?>
               if (data["status_teller"] === "") {
                 // sembunyikan button panggil
                 var btn = "-";
-              } 
+              }
               // jika data "status = 0"
               else if (data["status_teller"] === "0") {
                 // tampilkan button panggil
                 var btn = "<button class=\"btn btn-success btn-sm rounded-circle\"><i class=\"bi-mic-fill\"></i></button>";
-              } 
+              }
               // jika data "status = 1"
               else if (data["status_teller"] === "1") {
                 // tampilkan button ulangi panggilan
@@ -175,9 +175,9 @@ include "../footer.php";?>
           },
         ],
         "order": [
-          [0, "desc"]             // urutkan data berdasarkan "no_antrian" secara descending
+          [0, "desc"] // urutkan data berdasarkan "no_antrian" secara descending
         ],
-        "iDisplayLength": 10,     // tampilkan 10 data per halaman
+        "iDisplayLength": 10, // tampilkan 10 data per halaman
       });
 
       // panggilan antrian dan update data
@@ -199,7 +199,7 @@ include "../footer.php";?>
 
         // mainkan suara nomor antrian
         setTimeout(function() {
-          responsiveVoice.speak("Nomor Antrian, " + data["no_antrian_teller"] + ", menuju, teller", "Indonesian Female", {
+          responsiveVoice.speak("Nomor Antrian, " + data["no_antrian_teller"] + ", silahkan ke teller dua", "Indonesian Female", {
             rate: 0.9,
             pitch: 1,
             volume: 10
@@ -208,9 +208,11 @@ include "../footer.php";?>
 
         // proses update data
         $.ajax({
-          type: "POST",               // mengirim data dengan method POST
-          url: "update.php",          // url file proses update data
-          data: { id_teller: id }            // tentukan data yang dikirim
+          type: "POST", // mengirim data dengan method POST
+          url: "update.php", // url file proses update data
+          data: {
+            id_teller: id
+          } // tentukan data yang dikirim
         });
       });
 
