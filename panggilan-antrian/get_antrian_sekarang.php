@@ -1,23 +1,33 @@
 <?php
 // pengecekan ajax request untuk mencegah direct access file, agar file tidak bisa diakses secara langsung dari browser
-// jika ada ajax request
 if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest')) {
   // panggil file "database.php" untuk koneksi ke database
   require_once "../config/database.php";
 
+  // mulai session untuk mengambil data cabang pengguna
+  session_start();
+
+  // ambil cabang_id dari session
+  $cabang_id = $_SESSION['cabang_id'] ?? null;
+
+  // cek apakah cabang_id tersedia
+  if (!$cabang_id) {
+    die('Akses tidak diizinkan!');
+  }
+
   // ambil tanggal sekarang
   $tanggal = gmdate("Y-m-d", time() + 60 * 60 * 7);
 
-  // sql statement untuk menampilkan data "no_antrian" dari tabel "tbl_antrian" berdasarkan "tanggal" dan "status = 1"
+  // sql statement untuk menampilkan data "no_antrian" dari tabel "tbl_antrian" berdasarkan "tanggal", "status = 1", dan "cabang_id"
   $query = mysqli_query($mysqli, "SELECT no_antrian FROM tbl_antrian 
-                                  WHERE tanggal='$tanggal' AND status='1' 
-                                  ORDER BY updated_date DESC LIMIT 1")
-                                  or die('Ada kesalahan pada query tampil data : ' . mysqli_error($mysqli));
+                                    WHERE tanggal='$tanggal' AND status='1' AND cabang_id='$cabang_id' 
+                                    ORDER BY updated_date DESC LIMIT 1")
+    or die('Ada kesalahan pada query tampil data : ' . mysqli_error($mysqli));
+
   // ambil jumlah baris data hasil query
   $rows = mysqli_num_rows($query);
 
   // cek hasil query
-  // jika data "no_antrian" ada
   if ($rows <> 0) {
     // ambil data hasil query
     $data = mysqli_fetch_assoc($query);
@@ -26,10 +36,8 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH
 
     // tampilkan data
     echo number_format($no_antrian, 0, '', '.');
-  } 
-  // jika data "no_antrian" tidak ada
-  else {
-    // tampilkan "-"
+  } else {
+    // jika data "no_antrian" tidak ada, tampilkan "-"
     echo "-";
   }
 }
