@@ -1,19 +1,31 @@
 <?php
 // pengecekan ajax request untuk mencegah direct access file, agar file tidak bisa diakses secara langsung dari browser
-// jika ada ajax request
 if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest')) {
   // panggil file "database.php" untuk koneksi ke database
   require_once "../config/database.php";
 
+  // mulai session untuk mengambil data cabang pengguna
+  session_start();
+
+  // ambil cabang_id dari session
+  $cabang_id = $_SESSION['cabang_id'] ?? null;
+
+  // cek apakah cabang_id tersedia
+  if (!$cabang_id) {
+    die('Akses tidak diizinkan!');
+  }
+
   // ambil tanggal sekarang
   $tanggal = gmdate("Y-m-d", time() + 60 * 60 * 7);
 
-  // sql statement untuk menampilkan jumlah data dari tabel "tbl_antrian" berdasarkan "tanggal"
+  // sql statement untuk menghitung jumlah data dari tabel "tbl_antrian" berdasarkan "tanggal" dan "cabang_id"
   $query = mysqli_query($mysqli, "SELECT count(id) as jumlah FROM tbl_antrian 
-                                  WHERE tanggal='$tanggal'")
-                                  or die('Ada kesalahan pada query tampil data : ' . mysqli_error($mysqli));
+                                    WHERE tanggal='$tanggal' AND cabang_id='$cabang_id'")
+    or die('Ada kesalahan pada query tampil data : ' . mysqli_error($mysqli));
+
   // ambil data hasil query
   $data = mysqli_fetch_assoc($query);
+
   // buat variabel untuk menampilkan data
   $jumlah_antrian = $data['jumlah'];
 

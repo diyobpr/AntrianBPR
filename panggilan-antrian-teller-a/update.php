@@ -16,9 +16,10 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH
   }
 
   // mengecek data post dari ajax
-  if (isset($_POST['id_teller'])) {
+  if (isset($_POST['id_teller']) && isset($_POST['bagian'])) {
     // ambil data hasil post dari ajax
     $id = mysqli_real_escape_string($mysqli, $_POST['id_teller']);
+    $bagian = mysqli_real_escape_string($mysqli, $_POST['bagian']); // nilai bagian yang akan diupdate
     // tentukan nilai status
     $status = "1";
     // ambil tanggal dan waktu update data
@@ -31,9 +32,9 @@ if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH
 
     // cek apakah data ditemukan
     if (mysqli_num_rows($check_query) > 0) {
-      // sql statement untuk update data di tabel "tbl_antrian_teller" berdasarkan "id_teller" dan "cabang_id"
+      // sql statement untuk update data di tabel "tbl_antrian_teller"
       $update = mysqli_query($mysqli, "UPDATE tbl_antrian_teller
-                                             SET status_teller='$status', updated_date_teller='$updated_date'
+                                             SET status_teller='$status', updated_date_teller='$updated_date', bagian='$bagian'
                                              WHERE id_teller='$id' AND cabang_id='$cabang_id'")
         or die('Ada kesalahan pada query update : ' . mysqli_error($mysqli));
     } else {

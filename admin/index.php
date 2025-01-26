@@ -48,10 +48,10 @@ $cabang_id = $_SESSION['cabang_id'] ?? null; // Gunakan null jika session tidak 
               <?php if ($cabang_id == 312): ?>
                 <!-- Khusus cabang_id 312, tampilkan Teller A dan Teller B -->
                 <a href="../panggilan-antrian-teller-a" class="btn btn-success rounded-pill px-4 py-2 me-2">
-                  Teller A
+                  Teller 1
                 </a>
                 <a href="../panggilan-antrian-teller-b" class="btn btn-success rounded-pill px-4 py-2">
-                  Teller B
+                  Teller 2
                 </a>
               <?php else: ?>
                 <!-- Selain cabang_id 312, tampilkan tombol Tampilkan -->

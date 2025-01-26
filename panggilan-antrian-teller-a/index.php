@@ -211,7 +211,8 @@ include "../header.php";
           type: "POST", // mengirim data dengan method POST
           url: "update.php", // url file proses update data
           data: {
-            id_teller: id
+            id_teller: id,
+            bagian: "1"
           } // tentukan data yang dikirim
         });
       });
