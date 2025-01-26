@@ -1,5 +1,11 @@
 <?php
 include "../header.php";
+
+// Mulai sesi untuk mendapatkan data pengguna yang login
+session_start();
+
+// Ambil cabang_id dari session
+$cabang_id = $_SESSION['cabang_id'] ?? null; // Gunakan null jika session tidak tersedia
 ?>
 
 <body class="d-flex flex-column h-100">
@@ -9,7 +15,7 @@ include "../header.php";
       <div class="alert alert-light d-flex align-items-center mb-5" role="alert">
         <i class="bi-info-circle text-success me-3 fs-3"></i>
         <div>
-        Selamat Datang di Aplikasi Nomor Antrian <strong>BPR Sukabumi</strong>.
+          Selamat Datang di Aplikasi Nomor Antrian <strong>BPR Sukabumi</strong>.
         </div>
       </div>
 
@@ -29,7 +35,8 @@ include "../header.php";
             </div>
           </div>
         </div>
-        <!-- link halaman panggilan antrian -->
+
+        <!-- link halaman panggilan antrian teller -->
         <div class="col-lg-6 mb-4">
           <div class="card border-0 shadow-sm">
             <div class="card-body p-5">
@@ -38,9 +45,20 @@ include "../header.php";
               </div>
               <h3>Teller</h3>
               <p class="mb-4">Panggil Nasabah Loket Teller</p>
-              <a href="../panggilan-antrian-teller" class="btn btn-success rounded-pill px-4 py-2">
-                Tampilkan <i class="bi-chevron-right ms-2"></i>
-              </a>
+              <?php if ($cabang_id == 312): ?>
+                <!-- Khusus cabang_id 312, tampilkan Teller A dan Teller B -->
+                <a href="../panggilan-antrian-teller-a" class="btn btn-success rounded-pill px-4 py-2 me-2">
+                  Teller A
+                </a>
+                <a href="../panggilan-antrian-teller-b" class="btn btn-success rounded-pill px-4 py-2">
+                  Teller B
+                </a>
+              <?php else: ?>
+                <!-- Selain cabang_id 312, tampilkan tombol Tampilkan -->
+                <a href="../panggilan-antrian-teller" class="btn btn-success rounded-pill px-4 py-2">
+                  Tampilkan <i class="bi-chevron-right ms-2"></i>
+                </a>
+              <?php endif; ?>
             </div>
           </div>
         </div>
