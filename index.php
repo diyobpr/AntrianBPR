@@ -69,13 +69,19 @@ include "header.php";
                 </div>
                 <h3>Laporan</h3>
                 <p class="mb-4">Lihat laporan aktivitas dan data nasabah.</p>
-                <a href="laporan/index.php" class="btn btn-success rounded-pill px-4 py-2">
-                  Masuk <i class="bi-chevron-right ms-2"></i>
+                <!-- Tombol untuk Customer Service -->
+                <a href="laporan/laporan-cs.php" class="btn btn-success rounded-pill px-4 py-2 me-2">
+                  Customer Service <i class="bi-chevron-right ms-2"></i>
+                </a>
+                <!-- Tombol untuk Teller -->
+                <a href="laporan/laporan-teller.php" class="btn btn-success rounded-pill px-4 py-2">
+                  Teller <i class="bi-chevron-right ms-2"></i>
                 </a>
               </div>
             </div>
           </div>
         <?php endif; ?>
+
 
         <!-- link halaman Tambah User (role_id 1) -->
         <?php if ($_SESSION['role_id'] == 1): ?>
