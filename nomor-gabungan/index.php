@@ -1,6 +1,33 @@
 <?php
-include "../header.php";
+// Mulai session dan koneksi ke database
+session_start();
+require_once "../config/database.php"; // File koneksi database Anda
+
+// Pastikan user sudah login
+if (!isset($_SESSION['cabang_id'])) {
+    header("Location: ../login.php");
+    exit;
+}
+
+// Ambil cabang_id dari session
+$cabang_id = $_SESSION['cabang_id'];
+
+// Query untuk mendapatkan nama cabang berdasarkan cabang_id
+$query = "SELECT nama FROM cabang WHERE id = ?";
+$stmt = $mysqli->prepare($query);
+$stmt->bind_param("i", $cabang_id);
+$stmt->execute();
+$stmt->bind_result($nama_cabang);
+$stmt->fetch();
+$stmt->close();
+
+// Jika nama cabang tidak ditemukan, gunakan nama default
+if (empty($nama_cabang)) {
+    $nama_cabang = "Cabang Tidak Diketahui";
+}
 ?>
+
+<?php include "../header.php"; ?>
 
 <body class="d-flex flex-column h-100">
     <main class="flex-shrink-0">
@@ -48,9 +75,7 @@ include "../header.php";
     </main>
 
     <!-- Footer -->
-    <?php
-    include "../footer.php";
-    ?>
+    <?php include "../footer.php"; ?>
 
     <!-- jQuery Core -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
@@ -58,6 +83,9 @@ include "../header.php";
 
     <script type="text/javascript">
         $(document).ready(function() {
+            // Ambil nama cabang dari PHP
+            const namaCabang = `<?= addslashes($nama_cabang) ?>`;
+
             // Load data antrian awal
             $('#antrian_cs').load('../nomor-antrian/get_antrian.php');
             $('#antrian_teller').load('../nomor-antrian-teller/get_antrian_teller.php');
@@ -75,7 +103,7 @@ include "../header.php";
 \x1B\x40
 \x1B\x61\x01
 \x1B\x45\x01PERUMDA BPR SUKABUMI\x1B\x45\x00
-Cabang Cikembar\n
+${namaCabang}\n
 \x1B\x61\x01ANTRIAN Customer Service\n
 \x1D\x21\x11NO ${nomorAntrian}\x1D\x21\x00\n
 ${new Date().toLocaleString('id-ID')}
@@ -104,7 +132,7 @@ ${new Date().toLocaleString('id-ID')}
 \x1B\x40
 \x1B\x61\x01
 \x1B\x45\x01PERUMDA BPR SUKABUMI\x1B\x45\x00
-Cabang Cikembar\n
+${namaCabang}\n
 \x1B\x61\x01ANTRIAN Teller\n
 \x1D\x21\x11NO ${nomorAntrian}\x1D\x21\x00\n
 ${new Date().toLocaleString('id-ID')}

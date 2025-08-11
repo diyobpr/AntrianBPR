@@ -1,6 +1,31 @@
 <?php
-include "../header.php";
+session_start();
+require_once "../config/database.php"; // Pastikan ini mengarah ke file koneksi database Anda
+
+// Pastikan user sudah login
+if (!isset($_SESSION['cabang_id'])) {
+  header("Location: ../login.php");
+  exit;
+}
+
+// Ambil cabang_id dari session
+$cabang_id = $_SESSION['cabang_id'];
+
+// Query untuk mendapatkan nama cabang berdasarkan cabang_id
+$query = "SELECT nama FROM cabang WHERE id = ?";
+$stmt = $mysqli->prepare($query);
+$stmt->bind_param("i", $cabang_id);
+$stmt->execute();
+$stmt->bind_result($nama_cabang);
+$stmt->fetch();
+$stmt->close();
+
+// Jika tidak ada nama cabang, gunakan nama default
+if (empty($nama_cabang)) {
+  $nama_cabang = "Cabang Tidak Diketahui";
+}
 ?>
+
 
 <body class="d-flex flex-column h-100">
   <main class="flex-shrink-0">
@@ -48,27 +73,31 @@ include "../header.php";
 
 
   <script type="text/javascript">
-  $(document).ready(function () {
-  // Tampilkan jumlah antrian
-  $('#antrian').load('get_antrian.php');
+    $(document).ready(function() {
+      // Tampilkan jumlah antrian
+      // Tampilkan jumlah antrian
+      $('#antrian').load('get_antrian.php');
 
-  // Event klik untuk mengambil nomor antrian
-  $('#insert').on('click', function () {
-    $.ajax({
-      type: 'POST',
-      url: 'insert.php',
-      success: function (result) {
-        if (result === 'Sukses') {
-          // Update nomor antrian setelah berhasil
-          $('#antrian').load('get_antrian.php', function () {
-            const nomorAntrian = $('#antrian').text().trim(); // Ambil teks nomor antrian
+      // Ambil nama cabang dari PHP
+      const namaCabang = `<?= addslashes($nama_cabang) ?>`; // Escape karakter khusus
 
-            // ESC/POS Commands
-            const content = `
+      // Event klik untuk mengambil nomor antrian
+      $('#insert').on('click', function() {
+        $.ajax({
+          type: 'POST',
+          url: 'insert.php',
+          success: function(result) {
+            if (result === 'Sukses') {
+              // Update nomor antrian setelah berhasil
+              $('#antrian').load('get_antrian.php', function() {
+                const nomorAntrian = $('#antrian').text().trim(); // Ambil teks nomor antrian
+
+                // ESC/POS Commands
+                const content = `
 \x1B\x40 
 \x1B\x61\x01
 \x1B\x45\x01PERUMDA BPR SUKABUMI\x1B\x45\x00
-Cabang Cikembar\n
+${namaCabang}\n
 \x1B\x61\x01ANTRIAN Customer Service\n
 \x1D\x21\x11NO ${nomorAntrian}\x1D\x21\x00\n
 ${new Date().toLocaleString('id-ID', {
@@ -83,18 +112,19 @@ ${new Date().toLocaleString('id-ID', {
 \n-------------------\n
 `;
 
-            // Kirim ke printer Bluetooth
-            connectToBluetoothPrinter(content);
-          });
-        }
-      },
-      error: function (xhr) {
-        console.error('Error:', xhr.responseText);
-        alert('Terjadi kesalahan. Silakan coba lagi.');
-      },
+                // Kirim ke printer Bluetooth
+                connectToBluetoothPrinter(content);
+              });
+            }
+          },
+          error: function(xhr) {
+            console.error('Error:', xhr.responseText);
+            alert('Terjadi kesalahan. Silakan coba lagi.');
+          },
+        });
+      });
+
     });
-  });
-});
 
 
     function printSection(id) {

@@ -123,7 +123,7 @@ include "../header.php";
   <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.10.25/datatables.min.js"></script>
   <!-- Responsivevoice -->
   <!-- Get API Key -> https://responsivevoice.org/ -->
-  <script src="https://code.responsivevoice.org/responsivevoice.js?key=jQZ2zcdq"></script>
+  <script src="https://code.responsivevoice.org/responsivevoice.js?key=wI8dA0pN"></script>
 
   <script type="text/javascript">
     $(document).ready(function() {
