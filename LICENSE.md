@@ -1,4 +1,3 @@
-# Copyright (c) 2021 - Indra Styawantoro. All rights reserved.
 
 
 # Permissions
