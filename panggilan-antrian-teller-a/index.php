@@ -110,7 +110,6 @@ include "../header.php";
   <?php
   include "../footer.php"; ?>
 
-  <!-- load file audio bell antrian -->
   <audio id="tingtung" src="../assets/audio/tingtung.mp3"></audio>
 
   <!-- jQuery Core -->
